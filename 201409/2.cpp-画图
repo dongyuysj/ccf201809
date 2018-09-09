@@ -1,0 +1,28 @@
+#include<bits/stdc++.h>
+using namespace std;
+int mp[105][105];
+int shua(int a, int b, int c, int d)
+{
+    int res = 0;
+    for(int i = a + 1; i <= c; i ++){
+        for(int j = b + 1; j <= d;j ++){
+            if(mp[i][j] == 0) {mp[i][j] = 1; res ++;}
+        }
+    }
+    printf("res: %d\n", res);
+    return res;
+}
+int main()
+{
+    int n;
+    memset(mp, 0, sizeof(mp));
+    scanf("%d", &n);
+    int ans = 0;
+    while(n --){
+        int a, b, c, d;
+        scanf("%d%d%d%d", &a, &b, &c, &d);
+        ans += shua(a, b, c, d);
+    }
+    printf("%d\n", ans);
+    return 0;
+}
