@@ -1,0 +1,84 @@
+//能使用ll尽量使用ll而不要使用int
+//bfs变形，最开始进入队列的不只是一个数据，直接初始化多个数据
+#include<bits/stdc++.h>
+#define inf 0x3f3f3f3f3f3f3f3f
+#define ll long long
+using namespace std;
+const  ll N = 1005;
+ll mp[N][N];
+ll ans[N][N];
+ll dx[] = {0, 0, 1, -1};
+ll dy[] = {1, -1, 0, 0};
+typedef struct node
+{
+     ll x, y, step, price;
+};
+vector<node> shop, custom;
+ll vis[N][N];
+ll n, m, k, d;
+ll price[N];
+queue<node> que;
+ll hefa(ll x,  ll y)
+{
+    if(x >= 1 && x <= n && y >= 1 && y <= n && !mp[x][y]) return 1;
+    return 0;
+}
+void bfs()
+{
+    while(que.size()){
+        node tmp;
+        tmp = que.front();
+        ans[tmp.x][tmp.y] = min(ans[tmp.x][tmp.y], tmp.step);
+        que.pop();
+        for(ll i = 0; i < 4; i ++){
+             ll xx = tmp.x + dx[i];
+             ll yy = tmp.y + dy[i];
+            if(hefa(xx, yy) && !vis[xx][yy]){
+                vis[xx][yy] = 1;
+                node tmp1;
+                tmp1.x = xx, tmp1.y = yy, tmp1.step = tmp.step + 1;
+                que.push(tmp1);
+            }
+        }
+    }
+}
+int main()
+{
+    memset(mp, 0, sizeof(mp));
+    memset(ans, inf, sizeof(ans));
+    scanf("%lld%lld%lld%lld", &n, &m, &k, &d);
+    for(ll i = 1; i <= m; i ++){
+        node tmp;
+        scanf("%lld%lld", &tmp.x, &tmp.y);
+        shop.push_back(tmp);
+    }
+    memset(vis, 0, sizeof(vis));
+    for(ll i = 1; i <= k; i ++){
+        node tmp;
+        scanf("%lld%lld%lld", &tmp.x, &tmp.y, &tmp.price);
+        if(!vis[tmp.x][tmp.y]){
+            vis[tmp.x][tmp.y] = 1;
+            custom.push_back(tmp);
+        }
+    }
+    for(ll i = 1; i <= d; i ++){
+         ll x, y;
+        scanf("%lld%lld", &x, &y);
+        mp[x][y] = 1;
+    }
+    memset(vis, 0, sizeof(vis));
+    for(ll i = 0; i < shop.size(); i ++){
+        node tmp;
+        tmp.x = shop[i].x, tmp.y = shop[i].y, tmp.step = 0;
+        que.push(tmp);
+        vis[tmp.x][tmp.y] = 1;
+        ans[tmp.x][tmp.y] = 0;
+    }
+    bfs();
+     ll res = 0;
+    for(ll i = 0; i < custom.size(); i ++){
+        node tmp = custom[i];
+        res += ans[tmp.x][tmp.y] * tmp.price;
+    }
+    printf("%lld\n", res);
+}
