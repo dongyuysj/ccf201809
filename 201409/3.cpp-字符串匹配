@@ -1,0 +1,65 @@
+#include<bits/stdc++.h>
+using namespace std;
+const int N = 105;
+vector<string> ans;
+int next[N];
+void cal_next(string s)
+{
+    int k = -1;
+    next[0] = -1;
+    for(int i = 1; i < s.length(); i ++){
+        while(k != -1 && s[i] != s[k + 1]){
+            k = next[k];
+        }
+        if(s[i] == s[k + 1]) k ++;
+        next[i] = k;
+    }
+}
+int kmp(string s, string t)
+{
+    int k = -1;
+    for(int i = 0; i < t.length();  i ++){
+        while(k > -1 && t[i] != s[k + 1]){
+            k = next[k];
+        }
+        if(t[i] == s[k + 1]) k ++;
+        int endlen = s.length() - 1;//不知道为什么不可以在下面的if条件中直接计算endlen，直接计算得到错误的结果
+        if(k >= endlen){return 1;}
+    }
+    return 0;
+}
+int main()
+{
+    string s;
+    cin >> s;
+    int f;
+    cin >> f;
+    int n;
+    cin >> n;
+    if(!f){
+        for(int i = 0; i < s.length(); i ++){
+                if(s[i] >= 'A' && s[i] <= 'Z'){
+                    s[i] = s[i] - 'A' + 'a';
+                }
+        }
+    }
+    cal_next(s);
+    while(n --){
+        string st, tmp;
+        cin >> st;
+        tmp = st;
+        if(!f){
+            for(int i = 0; i < st.length(); i ++){
+                if(st[i] >= 'A' && st[i] <= 'Z'){
+                    st[i] = st[i] - 'A' + 'a';
+                }
+            }
+        }
+        if(kmp(s, st)) ans.push_back(tmp);
+    }
+
+    for(int i = 0; i < ans.size(); i ++){
+        cout << ans[i] << endl;
+    }
+    return 0;
+}
