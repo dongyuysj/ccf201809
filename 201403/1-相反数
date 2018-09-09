@@ -1,0 +1,19 @@
+#include<bits/stdc++.h>
+using namespace std;
+int a[1005];
+int main()
+{
+    int n;
+    scanf("%d", &n);
+    int ans = 0;
+    for(int i = 1; i <= n; i ++){
+        int k;
+        scanf("%d", &k);
+        if(a[abs(k)] == 1) ans ++;
+        else{
+            a[abs(k)] = 1;
+        }
+    }
+    printf("%d\n", ans);
+    return 0;
+}
