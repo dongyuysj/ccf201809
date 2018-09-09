@@ -1,0 +1,74 @@
+//此题使用单纯的bfs不合适，因为使用bfs时，所有的点都只能够访问一次，
+//但是每个点要求可进入队列次数不止一次，因为如果后续的时候某个点的K值被更新了，
+//此时这个点可以继续用于被更新其他的点，因此一个点可以多次进入队列，因此此题不适合使用bfs
+//此题更适合使用spfa算法
+
+#include<bits/stdc++.h>
+#define ll long long
+#define inf 0x3f3f3f3f3f3f3f3f
+using namespace std;
+const ll  M = 305, N = 305;
+struct node
+{
+    ll x, y;
+} mp[N];
+struct node1
+{
+    ll p, k;
+};
+ll vis[N][N];
+ll ans = N;
+ll n, m, kk, r;
+ll adis[N][N];
+ll dis(ll  x, ll  y)
+{
+    ll x1 = mp[x].x, y1 = mp[x].y;
+    ll x2 = mp[y].x, y2 = mp[y].y;
+    return abs((x2 - x1)*(x2 - x1) + (y2 - y1) * (y2 - y1));
+}
+void spfa()
+{
+    queue<node1> que;
+    node1 tmp;
+    tmp.p = 1, tmp.k = 0;
+    que.push(tmp);
+    vis[1][0] = 1;
+    adis[1][0] = 0;
+    while(que.size()){
+        tmp = que.front();
+        que.pop();
+        ll pos = tmp.p;
+        ll k = tmp.k;
+        vis[pos][k] = 0;
+        for(ll i = 1; i <= n + m; i ++){
+//            printf("%lld %lld\n", mp[i].x, mp[i].y);
+            ll nk = (i <= n) ? k : k + 1;
+            if(!vis[i][nk]){
+                if(nk <= kk && dis(pos, i) <= r * r && adis[pos][k] + 1 < adis[i][nk]){
+//                    printf("%lld %lld\n", i - 1, nk);
+                    vis[i][nk] = 1;
+                    node1 tmp1;
+                    tmp1.p = i, tmp1.k = nk;
+                    que.push(tmp1);
+                    adis[i][nk] = adis[pos][k] + 1;
+                }
+            }
+        }
+    }
+}
+int main()
+{
+    scanf("%lld%lld%lld%lld", &n, &m, &kk, &r);
+    for(ll i = 1; i <= m + n; i ++){
+        scanf("%lld%lld", &mp[i].x, &mp[i].y);
+    }
+    memset(vis, 0, sizeof(vis));
+    memset(adis, inf, sizeof(adis));
+    ans = inf;
+    spfa();
+    for(int i = 0; i <= kk; i ++){
+        ans = min(ans, adis[2][i]);
+    }
+    printf("%lld\n", ans - 1);
+    return 0;
+}
