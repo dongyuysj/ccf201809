@@ -1,5 +1,5 @@
-//���·���Σ���Ҫά��ǰһ�����ʳ��ļ۸�
-//���Բ���spfa�㷨�������·�㷨
+//最短路变形，需要维护前一个买的食物的价格
+//可以采用spfa算法或者最短路算法
 #include<bits/stdc++.h>
 #define ll long long
 using namespace std;
